@@ -18,10 +18,10 @@ public sealed class PetHooks(
     [AfterScenario(Order = 0)]
     public void LogLastExchangeOnFailure()
     {
-        if (scenarioContext.TestError is null || context.Response is null)
+        if (scenarioContext.TestError is null || context.LastResponse is null)
             return;
 
-        output.WriteLine(Describe(context.Response));
+        output.WriteLine(Describe(context.LastResponse));
     }
 
     [AfterScenario(Order = 100)]

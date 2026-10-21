@@ -9,19 +9,19 @@ public sealed class PetContext
 {
     public Pet? Pet { get; set; }
     
-    public RestResponse? Response { get; set; }
+    public RestResponse? LastResponse { get; set; }
 
     // Ids of pets created on the server, deleted after the scenario
     public HashSet<long> CreatedPetIds { get; } = [];
 
     public Pet RequiredPet => Pet ?? throw new InvalidOperationException("No pet in context. Add a Given step that creates one.");
 
-    public RestResponse RequiredResponse =>
-        Response ?? throw new InvalidOperationException("No response in context. Add a When step that calls the API.");
+    public RestResponse RequiredLastResponse =>
+        LastResponse ?? throw new InvalidOperationException("No response in context. Add a When step that calls the API.");
     
     public T? ResponseBodyAs<T>()
     {
-        var content = RequiredResponse.Content;
+        var content = RequiredLastResponse.Content;
         return string.IsNullOrEmpty(content) ? default : JsonSerializer.Deserialize<T>(content, PetstoreClient.JsonOptions);
     }
 }

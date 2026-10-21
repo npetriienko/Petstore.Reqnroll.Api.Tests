@@ -51,12 +51,12 @@ public sealed class PetSteps(PetController petController, PetContext context)
     {
         var pet = context.RequiredPet;
         context.CreatedPetIds.Add(pet.Id);
-        context.Response = await petController.AddPetAsync(pet);
+        context.LastResponse = await petController.AddPetAsync(pet);
     }
 
     [When("I get the pet by its id")]
     public async Task WhenIGetThePetByItsId() =>
-        context.Response = await petController.GetPetByIdAsync(context.RequiredPet.Id);
+        context.LastResponse = await petController.GetPetByIdAsync(context.RequiredPet.Id);
 
     [When("I delete the pet")]
     public async Task WhenIDeleteThePet()
@@ -66,7 +66,7 @@ public sealed class PetSteps(PetController petController, PetContext context)
         if (response.StatusCode == HttpStatusCode.OK)
             context.CreatedPetIds.Remove(petId);
 
-        context.Response = response;
+        context.LastResponse = response;
     }
 
     #endregion
@@ -80,9 +80,9 @@ public sealed class PetSteps(PetController petController, PetContext context)
     [Then("the pet should not be retrievable by its id")]
     public async Task ThenThePetShouldNotBeRetrievableByItsId()
     {
-        context.Response = await petController.GetPetByIdAsync(context.RequiredPet.Id);
+        context.LastResponse = await petController.GetPetByIdAsync(context.RequiredPet.Id);
 
-        context.Response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        context.LastResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Then("the response message should be the pet id")]

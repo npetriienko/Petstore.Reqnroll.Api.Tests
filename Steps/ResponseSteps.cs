@@ -11,7 +11,7 @@ public sealed class ResponseSteps(PetContext context)
     [Then("the response status code should be {int}")]
     public void ThenTheResponseStatusCodeShouldBe(int statusCode)
     {
-        var response = context.RequiredResponse;
+        var response = context.RequiredLastResponse;
         ((int)response.StatusCode).Should().Be(statusCode, "the response body was: {0}", response.Content);
     }
 
@@ -21,5 +21,5 @@ public sealed class ResponseSteps(PetContext context)
 
     [Then("the response body should be empty")]
     public void ThenTheResponseBodyShouldBeEmpty() =>
-        context.RequiredResponse.Content.Should().BeNullOrEmpty();
+        context.RequiredLastResponse.Content.Should().BeNullOrEmpty();
 }
