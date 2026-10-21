@@ -1,0 +1,12 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+# Reqnroll generated code
+*.feature.cs
+
+# IDE / OS
+.idea/
+.DS_Store
+*.user
