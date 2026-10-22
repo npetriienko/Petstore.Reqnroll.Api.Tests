@@ -4,14 +4,14 @@ using RestSharp;
 
 namespace Petstore.Reqnroll.Api.Tests.Framework.Http.Clients;
 
-public class PetController(RestClient client) : HttpRequests(client)
+public sealed class PetApi(RestClient client) : ApiClientBase(client)
 {
-    public Task<RestResponse<Pet>> AddPetAsync(Pet petRequest)
-        => PostAsync<Pet>(Endpoints.Pet, petRequest);
+    public Task<RestResponse<Pet>> AddPetAsync(Pet pet)
+        => PostAsync<Pet>(Endpoints.Pet, pet);
 
     public Task<RestResponse<Pet>> GetPetByIdAsync(long petId)
         => GetAsync<Pet>(Endpoints.PetById(petId));
-    
+
     public Task<RestResponse<ApiResponse>> DeletePetByIdAsync(long petId)
         => DeleteAsync<ApiResponse>(Endpoints.PetById(petId));
 }

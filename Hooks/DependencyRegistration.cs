@@ -17,7 +17,7 @@ public static class DependencyRegistration
         // Singletons live for the whole test run
         services.AddSingleton(_ => ClientSettings.Load());
         services.AddSingleton<PetstoreClient>();
-        services.AddSingleton(sp => sp.GetRequiredService<PetstoreClient>().PetController);
+        services.AddSingleton(sp => sp.GetRequiredService<PetstoreClient>().PetApi);
 
         // Scoped services get a new instance per scenario
         services.AddScoped<PetContext>();

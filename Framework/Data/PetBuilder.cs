@@ -27,31 +27,9 @@ public class PetBuilder
             .RuleFor(p => p.Id, f => f.Random.Long(MinId, MaxId))
             .RuleFor(p => p.Name, f => f.Name.FirstName())
             .RuleFor(p => p.Category, f => new Category { Id = f.Random.Long(1, 1000), Name = f.PickRandom(CategoryNames) })
-            .RuleFor(p => p.PhotoUrls, f => f.Make(f.Random.Int(1, 3), () => f.Image.PicsumUrl()).ToList())
-            .RuleFor(p => p.Tags, f => f.Make(f.Random.Int(1, 3), () => new Tag { Id = f.Random.Long(1, 1000), Name = f.Lorem.Word() }).ToList())
+            .RuleFor(p => p.PhotoUrls, f => [.. f.Make(f.Random.Int(1, 3), () => f.Image.PicsumUrl())])
+            .RuleFor(p => p.Tags, f => [.. f.Make(f.Random.Int(1, 3), () => new Tag { Id = f.Random.Long(1, 1000), Name = f.Lorem.Word() })])
             .RuleFor(p => p.Status, f => f.PickRandom<PetStatus>());
-    }
-
-    /// <summary>
-    /// Sets the id of the pet.
-    /// </summary>
-    /// <param name="id">The id to set.</param>
-    /// <returns>The current instance of <see cref="PetBuilder"/>.</returns>
-    public PetBuilder WithId(long id)
-    {
-        _petFaker.RuleFor(p => p.Id, _ => id);
-        return this;
-    }
-
-    /// <summary>
-    /// Sets the name of the pet.
-    /// </summary>
-    /// <param name="name">The name to set.</param>
-    /// <returns>The current instance of <see cref="PetBuilder"/>.</returns>
-    public PetBuilder WithName(string name)
-    {
-        _petFaker.RuleFor(p => p.Name, _ => name);
-        return this;
     }
 
     /// <summary>
@@ -62,17 +40,6 @@ public class PetBuilder
     public PetBuilder WithCategory(Category? category)
     {
         _petFaker.RuleFor(p => p.Category, _ => category);
-        return this;
-    }
-
-    /// <summary>
-    /// Sets the photo URLs of the pet.
-    /// </summary>
-    /// <param name="photoUrls">The photo URLs to set.</param>
-    /// <returns>The current instance of <see cref="PetBuilder"/>.</returns>
-    public PetBuilder WithPhotoUrls(List<string> photoUrls)
-    {
-        _petFaker.RuleFor(p => p.PhotoUrls, _ => photoUrls);
         return this;
     }
 

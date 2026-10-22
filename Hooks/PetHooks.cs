@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using Petstore.Reqnroll.Api.Tests.Context;
+using Petstore.Reqnroll.Api.Tests.Framework.Http;
 using Petstore.Reqnroll.Api.Tests.Framework.Http.Clients;
 using RestSharp;
 
@@ -10,7 +11,7 @@ namespace Petstore.Reqnroll.Api.Tests.Hooks;
 [Binding]
 public sealed class PetHooks(
     PetContext context,
-    PetController petController,
+    PetApi petApi,
     ScenarioContext scenarioContext,
     IReqnrollOutputHelper output)
 {
@@ -29,7 +30,7 @@ public sealed class PetHooks(
     {
         foreach (var petId in context.CreatedPetIds)
         {
-            var response = await petController.DeletePetByIdAsync(petId);
+            var response = await petApi.DeletePetByIdAsync(petId);
             if (response.StatusCode is not (HttpStatusCode.OK or HttpStatusCode.NotFound))
                 output.WriteLine($"Cleanup: deleting pet {petId} returned {(int)response.StatusCode}");
         }
@@ -42,7 +43,7 @@ public sealed class PetHooks(
         {
             null => "<none>",
             string text => text,
-            var value => JsonSerializer.Serialize(value, PetstoreClient.JsonOptions)
+            var value => JsonSerializer.Serialize(value, JsonConfig.Options)
         };
 
         return new StringBuilder()

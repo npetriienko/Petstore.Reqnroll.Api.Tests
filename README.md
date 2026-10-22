@@ -81,8 +81,8 @@ The settings are checked at start-up. An invalid value makes every test fail str
 ├── Framework/                       # plain C#, no Reqnroll references
 │   ├── Config/                      # ClientSettings, ConfigurationException
 │   ├── Data/                        # PetBuilder (test data)
-│   └── Http/
-│       ├── Clients/                 # PetstoreClient, PetController, HttpRequests, Endpoints
+│   └── Http/                        # JsonConfig, RestResponseExtensions (BodyAs<T>)
+│       ├── Clients/                 # PetstoreClient, PetApi, ApiClientBase, Endpoints
 │       ├── Enums/                   # PetStatus
 │       └── Models/                  # ApiResponse, Pets/{Pet, Category, Tag}
 ├── Context/                         # PetContext: per-scenario state
@@ -97,13 +97,13 @@ Nothing under `Framework/` depends on Reqnroll, so the client, models and builde
 
 ## How it works
 
-**HTTP client.** `PetstoreClient` creates one RestSharp client from `ClientSettings` and exposes `PetController` with `AddPetAsync`, `GetPetByIdAsync` and `DeletePetByIdAsync`. Requests never throw on HTTP errors. Each method returns the full response, so the tests assert on the status code and body themselves. JSON uses camelCase, enums are sent as strings (`"available"`), and `null` fields are left out of requests.
+**HTTP client.** `PetstoreClient` creates one RestSharp client from `ClientSettings` and exposes `PetApi` with `AddPetAsync`, `GetPetByIdAsync` and `DeletePetByIdAsync`. Requests never throw on HTTP errors. Each method returns the full response, so the tests assert on the status code and body themselves. JSON settings live in `JsonConfig`: camelCase, enums sent as strings (`"available"`), and `null` fields left out of requests. `response.BodyAs<T>()` reads any response body with the same settings.
 
 **Dependency injection.** `DependencyRegistration` registers the services with Reqnroll's Microsoft DI plugin:
 
 | Service | Lifetime |
 |---------|----------|
-| `ClientSettings`, `PetstoreClient`, `PetController` | One instance for the whole test run |
+| `ClientSettings`, `PetstoreClient`, `PetApi` | One instance for the whole test run |
 | `PetContext` | New instance for each scenario |
 | Step and hook classes | Registered automatically by the plugin |
 
@@ -111,8 +111,8 @@ Nothing under `Framework/` depends on Reqnroll, so the client, models and builde
 
 ```csharp
 var pet = new PetBuilder()
-    .WithName("Rex")
     .WithStatus(PetStatus.Sold)
+    .WithTags(null)
     .Build();
 ```
 
@@ -144,7 +144,7 @@ Available steps:
 |------|------|
 | Given | `a valid pet with all fields` |
 | Given | `a valid pet with only the required fields` |
-| Given | `a pet id that does not exist` |
+| Given | `a pet that does not exist` |
 | Given | `an existing pet` |
 | When | `I add the pet` |
 | When | `I get the pet by its id` |

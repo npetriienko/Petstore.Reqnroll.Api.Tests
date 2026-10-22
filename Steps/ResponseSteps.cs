@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Petstore.Reqnroll.Api.Tests.Context;
+using Petstore.Reqnroll.Api.Tests.Framework.Http;
 using Petstore.Reqnroll.Api.Tests.Framework.Http.Models;
 
 namespace Petstore.Reqnroll.Api.Tests.Steps;
@@ -17,7 +18,7 @@ public sealed class ResponseSteps(PetContext context)
 
     [Then("the error response should have code {int}, type {string} and message {string}")]
     public void ThenTheErrorResponseShouldHave(int code, string type, string message) =>
-        context.ResponseBodyAs<ApiResponse>().Should().BeEquivalentTo(new ApiResponse { Code = code, Type = type, Message = message });
+        context.RequiredLastResponse.BodyAs<ApiResponse>().Should().BeEquivalentTo(new ApiResponse { Code = code, Type = type, Message = message });
 
     [Then("the response body should be empty")]
     public void ThenTheResponseBodyShouldBeEmpty() =>

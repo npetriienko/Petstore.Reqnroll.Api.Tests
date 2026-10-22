@@ -3,10 +3,10 @@ using RestSharp;
 namespace Petstore.Reqnroll.Api.Tests.Framework.Http.Clients;
 
 /// <summary>
-/// Base class for API controllers. Never throws on HTTP errors: the full response is returned
+/// Base class for API clients. Never throws on HTTP errors: the full response is returned
 /// so tests can assert on status code, headers and body.
 /// </summary>
-public class HttpRequests(RestClient client)
+public abstract class ApiClientBase(RestClient client)
 {
     protected Task<RestResponse<TResult>> GetAsync<TResult>(string route)
     {
